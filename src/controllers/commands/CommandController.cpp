@@ -504,6 +504,22 @@ void CommandController::initialize(Settings &, Paths &paths)
         return "";
     });
 
+    this->registerCommand("/open", [](const auto &words, auto channel) {
+        if (const auto type = channel->getType();
+            type != Channel::Type::Twitch &&
+            type != Channel::Type::TwitchWatching)
+        {
+            return "";
+        }
+
+        auto *twitchChannel = dynamic_cast<TwitchChannel *>(channel.get());
+
+        QDesktopServices::openUrl("https://twitch.tv/" +
+                                  twitchChannel->getName());
+
+        return "";
+    });
+
     this->registerCommand(
         "/chatters", [](const auto & /*words*/, auto channel) {
             auto twitchChannel = dynamic_cast<TwitchChannel *>(channel.get());
